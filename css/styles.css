@@ -355,20 +355,25 @@ footer{
   .nav-toggle{ display:block; }
   nav.main-nav{
     position:fixed; inset:0; top:70px;
+    z-index:250;
+    height:100vh;            /* fallback for older browsers */
+    height:100dvh;           /* accounts for mobile browser toolbars (Messenger/Zalo in-app browsers especially) */
     background:#fff;
     transform:translateX(100%);
     transition:transform .35s ease;
     padding:20px 8vw;
     overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
   }
   nav.main-nav.open{ transform:translateX(0); }
   nav.main-nav > ul{ flex-direction:column; gap:0; }
   nav.main-nav > ul > li{ border-bottom:1px solid var(--line); }
-  nav.main-nav > ul > li > a{ padding:16px 0; font-size:1rem; }
+  nav.main-nav > ul > li > a{ padding:20px 4px; font-size:1.15rem; display:block; }
   .has-sub .submenu{
     position:static; transform:none; box-shadow:none; border:none;
-    opacity:1; visibility:visible; display:none; padding:0 0 10px 14px; min-width:0;
+    opacity:1; visibility:visible; display:none; padding:0 0 14px 14px; min-width:0;
   }
+  .has-sub .submenu li a{ padding:14px 4px; font-size:1rem; display:block; }
   .has-sub.open .submenu{ display:block; }
 }
 
