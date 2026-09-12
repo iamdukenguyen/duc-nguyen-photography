@@ -20,21 +20,27 @@
   <nav class="main-nav" id="mainNav">
     <ul>
       <li class="has-sub">
-        <a href="../index.html">Home</a>
+        <div class="has-sub-row">
+          <a href="../index.html">Home</a>
+          <button class="submenu-toggle" aria-label="Toggle Home submenu" aria-expanded="false">&#8964;</button>
+        </div>
         <ul class="submenu">
           <li><a href="../about.html">About</a></li>
           <li><a href="../featured-works.html">Featured Works</a></li>
         </ul>
       </li>
       <li class="has-sub">
-        <a href="#">My Works</a>
+        <div class="has-sub-row">
+          <a href="#">My Works</a>
+          <button class="submenu-toggle" aria-label="Toggle My Works submenu" aria-expanded="false">&#8964;</button>
+        </div>
         <ul class="submenu">
           <li><a href="../landscapes.html">Landscapes &amp; Landmarks</a></li>
           <li><a href="../people.html">People &amp; Lifestyle</a></li>
           <li><a href="../wildlife-macro.html">Wildlife &amp; Macro</a></li>
         </ul>
       </li>
-      <li><a href="../blogs.html">Blogs</a></li>
+      <li class="nav-item-blogs"><a href="../blogs.html">Blogs</a></li>
       <li><a href="../connect.html">Connect</a></li>
       <li><a href="https://sites.google.com/view/ecoventuresvietnam" target="_blank" rel="noopener">My Workshops</a></li>
       <li><a href="https://www.instagram.com/wandersinframes/" target="_blank" rel="noopener">Instagram</a></li>
@@ -50,21 +56,21 @@
   </div>
   <h1 class="article-title">[Placeholder — second newest article title]</h1>
 </div>
-<img class="article-hero" src="../images/blog/article-02/hero.jpg" alt="[Placeholder — second newest article title]">
+<img class="article-hero" src="../images/blog/article-02/hero.webp" alt="[Placeholder — second newest article title]">
 
 <div class="article-body">
   <p>[Placeholder — opening paragraph. Set the scene: where this story takes place and why you went.]</p>
   <p>[Placeholder — second paragraph. What you were looking for, or what drew you to this place or subject.]</p>
-  <img src="../images/blog/article-02/01.jpg" alt="[Placeholder — second newest article title]">
+  <img src="../images/blog/article-02/01.webp" alt="[Placeholder — second newest article title]">
   <blockquote>[Placeholder — a short, punchy pull-quote from later in the story.]</blockquote>
-  <img src="../images/blog/article-02/02.jpg" alt="[Placeholder — second newest article title]">
+  <img src="../images/blog/article-02/02.webp" alt="[Placeholder — second newest article title]">
   <p>[Placeholder — continue the story. What happened, who you met, what changed your plan.]</p>
   <p>[Placeholder — closing paragraph. How the trip or shoot wrapped up, and what you took away from it.]</p>
-  <img src="../images/blog/article-02/03.jpg" alt="[Placeholder — second newest article title]">
+  <img src="../images/blog/article-02/03.webp" alt="[Placeholder — second newest article title]">
 </div>
 
 <div class="article-author-box">
-  <img src="../images/about/portrait.jpg" alt="Duc Nguyen">
+  <img src="../images/about/portrait.webp" alt="Duc Nguyen">
   <div>
     <div class="name">Duc Nguyen</div>
     <div style="font-size:0.82rem; color:var(--text-dim);">Freelance photographer</div>
@@ -82,25 +88,7 @@
     </div>
   </div>
 </footer>
-<script>
-  const navToggle = document.querySelector('.nav-toggle');
-  const mainNav = document.getElementById('mainNav');
-  if(navToggle){
-    navToggle.addEventListener('click', () => mainNav.classList.toggle('open'));
-  }
-  document.querySelectorAll('.has-sub > a').forEach(a=>{
-    a.addEventListener('click', (e)=>{
-      if(window.innerWidth <= 860 && a.getAttribute('href')==='#'){
-        e.preventDefault();
-        a.parentElement.classList.toggle('open');
-      }
-    });
-  });
-  window.addEventListener('scroll', ()=>{
-    const h = document.getElementById('siteHeader');
-    if(h) h.classList.toggle('scrolled', window.scrollY > 10);
-  });
-</script>
+<script src="../js/nav.js"></script>
 <script src="../js/protect.js"></script>
 
 </body>

@@ -20,21 +20,27 @@
   <nav class="main-nav" id="mainNav">
     <ul>
       <li class="has-sub">
-        <a href="index.html">Home</a>
+        <div class="has-sub-row">
+          <a href="index.html">Home</a>
+          <button class="submenu-toggle" aria-label="Toggle Home submenu" aria-expanded="false">&#8964;</button>
+        </div>
         <ul class="submenu">
           <li><a href="about.html">About</a></li>
           <li><a href="featured-works.html">Featured Works</a></li>
         </ul>
       </li>
       <li class="has-sub">
-        <a href="#">My Works</a>
+        <div class="has-sub-row">
+          <a href="#">My Works</a>
+          <button class="submenu-toggle" aria-label="Toggle My Works submenu" aria-expanded="false">&#8964;</button>
+        </div>
         <ul class="submenu">
           <li><a href="landscapes.html">Landscapes &amp; Landmarks</a></li>
           <li><a href="people.html">People &amp; Lifestyle</a></li>
           <li><a href="wildlife-macro.html">Wildlife &amp; Macro</a></li>
         </ul>
       </li>
-      <li><a href="blogs.html">Blogs</a></li>
+      <li class="nav-item-blogs"><a href="blogs.html">Blogs</a></li>
       <li><a href="connect.html">Connect</a></li>
       <li><a href="https://sites.google.com/view/ecoventuresvietnam" target="_blank" rel="noopener">My Workshops</a></li>
       <li><a href="https://www.instagram.com/wandersinframes/" target="_blank" rel="noopener">Instagram</a></li>
@@ -46,7 +52,7 @@
 <main>
   <div class="blog-hero" id="blogHero">
     <div class="blog-slide active">
-      <img src="images/blog/slider/featured-01.jpg" alt="[Placeholder — featured article 1 title]">
+      <img src="images/blog/slider/featured-01.webp" alt="[Placeholder — featured article 1 title]">
       <div class="blog-slide-overlay">
         <span class="blog-slide-cat">[Category]</span>
         <h2>[Placeholder — newest article title goes here]</h2>
@@ -54,7 +60,7 @@
       </div>
     </div>
     <div class="blog-slide">
-      <img src="images/blog/slider/featured-02.jpg" alt="[Placeholder — featured article 2 title]">
+      <img src="images/blog/slider/featured-02.webp" alt="[Placeholder — featured article 2 title]">
       <div class="blog-slide-overlay">
         <span class="blog-slide-cat">[Category]</span>
         <h2>[Placeholder — second newest article title]</h2>
@@ -62,7 +68,7 @@
       </div>
     </div>
     <div class="blog-slide">
-      <img src="images/blog/slider/featured-03.jpg" alt="[Placeholder — featured article 3 title]">
+      <img src="images/blog/slider/featured-03.webp" alt="[Placeholder — featured article 3 title]">
       <div class="blog-slide-overlay">
         <span class="blog-slide-cat">[Category]</span>
         <h2>[Placeholder — third newest article title]</h2>
@@ -77,19 +83,19 @@
     <h1 class="display">Blogs</h1>
     <div class="blog-grid" style="margin-top:40px;">
       <div class="blog-card">
-        <a href="articles/article-01.html"><img src="images/blog/cards/blog-01.jpg" alt="Blog post 1"></a>
+        <a href="articles/article-01.html"><img src="images/blog/cards/blog-01.webp" alt="Blog post 1"></a>
         <div class="blog-date">[Add date]</div>
         <h3><a href="articles/article-01.html" style="color:inherit;">[Placeholder — blog post title]</a></h3>
         <p>[Placeholder — one or two sentence summary of the post.]</p>
       </div>
       <div class="blog-card">
-        <a href="articles/article-02.html"><img src="images/blog/cards/blog-02.jpg" alt="Blog post 2"></a>
+        <a href="articles/article-02.html"><img src="images/blog/cards/blog-02.webp" alt="Blog post 2"></a>
         <div class="blog-date">[Add date]</div>
         <h3><a href="articles/article-02.html" style="color:inherit;">[Placeholder — blog post title]</a></h3>
         <p>[Placeholder — one or two sentence summary of the post.]</p>
       </div>
       <div class="blog-card">
-        <a href="articles/article-03.html"><img src="images/blog/cards/blog-03.jpg" alt="Blog post 3"></a>
+        <a href="articles/article-03.html"><img src="images/blog/cards/blog-03.webp" alt="Blog post 3"></a>
         <div class="blog-date">[Add date]</div>
         <h3><a href="articles/article-03.html" style="color:inherit;">[Placeholder — blog post title]</a></h3>
         <p>[Placeholder — one or two sentence summary of the post.]</p>
@@ -110,25 +116,8 @@
     </div>
   </div>
 </footer>
+<script src="js/nav.js"></script>
 <script>
-  const navToggle = document.querySelector('.nav-toggle');
-  const mainNav = document.getElementById('mainNav');
-  if(navToggle){
-    navToggle.addEventListener('click', () => mainNav.classList.toggle('open'));
-  }
-  document.querySelectorAll('.has-sub > a').forEach(a=>{
-    a.addEventListener('click', (e)=>{
-      if(window.innerWidth <= 860 && a.getAttribute('href')==='#'){
-        e.preventDefault();
-        a.parentElement.classList.toggle('open');
-      }
-    });
-  });
-  window.addEventListener('scroll', ()=>{
-    const h = document.getElementById('siteHeader');
-    if(h) h.classList.toggle('scrolled', window.scrollY > 10);
-  });
-
   // Blog featured hero — auto slideshow
   (function(){
     const slides = document.querySelectorAll('#blogHero .blog-slide');
