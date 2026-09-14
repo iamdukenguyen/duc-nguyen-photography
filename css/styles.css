@@ -35,6 +35,13 @@
 
 *{ margin:0; padding:0; box-sizing:border-box; }
 html{ scroll-behavior:smooth; }
+/* Turns off the browser's default blue/gray "tap highlight" flash that
+   Chrome/Safari draw over a link or button the instant you touch it on a
+   touchscreen — that's the blue shape appearing over the chevron and
+   nav links on tap. It's a default touch-feedback effect, not something
+   coming from any rule below; it doesn't affect keyboard focus outlines
+   (like the one on .submenu-toggle), only this touch-only flash. */
+a, button{ -webkit-tap-highlight-color: transparent; }
 body {
   background: var(--bg);
   color: var(--text);
