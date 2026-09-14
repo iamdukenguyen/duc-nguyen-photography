@@ -51,12 +51,37 @@ header{
   position:fixed; top:0; left:0; right:0; z-index:200;
   display:flex; align-items:center; justify-content:space-between;
   padding:22px 5vw;
-  background:rgba(255,255,255,0.92);
-  backdrop-filter:blur(6px);
   border-bottom:1px solid transparent;
   transition:border-color .3s ease;
 }
+/* The header's tint/blur lives on this ::before layer rather than on the
+   header element itself. Putting backdrop-filter directly on <header>
+   would make it a "containing block" for any position:fixed descendant
+   inside it (per spec) — which is exactly what broke the mobile nav menu
+   (nested inside header) into sizing itself against header's small box
+   instead of the real screen. Keeping the filter off header, and only on
+   this decorative pseudo-element, avoids that trap while still nesting
+   the nav naturally inside header for desktop's inline layout. */
+header::before{
+  content:'';
+  position:absolute; inset:0;
+  background:rgba(255,255,255,0.92);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+  z-index:-1;
+}
 header.scrolled{ border-bottom-color:var(--line); }
+/* On larger screens, once scrolled, drop the translucency/blur and go
+   fully opaque white instead — keeps the header solid and easy to read
+   over busy photo content as the page scrolls beneath it. Mobile keeps
+   the frosted look at all scroll positions (unchanged). */
+@media (min-width: 1025px){
+  header.scrolled::before{
+    background:#ffffff;
+    backdrop-filter:none;
+    -webkit-backdrop-filter:none;
+  }
+}
 
 /* Update existing logo container to use flexbox */
 .logo {
@@ -88,8 +113,14 @@ nav.main-nav > ul > li{
    hold the dropdown arrow button), while the other nav items are a plain
    <a> straight inside the <li>. That structural difference is what threw
    off their vertical alignment on desktop — centering every <li>'s content
-   the same way, regardless of what's inside it, fixes it for both cases. */
-@media (min-width: 1025px){
+   the same way, regardless of what's inside it, fixes it for both cases.
+   Gated to real-hover devices only (not just a width threshold): a tablet
+   is wide enough to qualify by width alone, but it uses the same stacked
+   mobile menu as a phone — turning its <li> into a flex row here would
+   push the chevron next to the text and shove the "My Works" submenu out
+   to the side instead of stacking it underneath, which is exactly the
+   tablet bug this was causing. */
+@media (min-width: 1025px) and (hover: hover) and (pointer: fine){
   nav.main-nav > ul > li{
     display:flex;
     align-items:center;
@@ -97,6 +128,7 @@ nav.main-nav > ul > li{
 }
 nav.main-nav > ul > li > a,
 nav.main-nav > ul > li .has-sub-row > a {
+  position: relative;
   font-family: var(--display);
   font-size: 0.78rem;
   font-weight: 800;
@@ -121,13 +153,30 @@ h2.display,
   font-family: var(--serif);
   color: var(--text-dim);
 }
+/* Absolutely positioned so this underline bar never adds its own height to
+   the link's box — it used to be display:block (an ordinary flow element),
+   which meant every nav link was quietly 2px taller than its text alone,
+   even at width:0. That's part of what made "Home" / "My Works" — the two
+   items with a chevron to visually line up against — look off-center: the
+   text sat 2px higher than true-center inside its own now-slightly-taller
+   box, which only became noticeable where there's a second element (the
+   chevron) to compare it to. */
 nav.main-nav > ul > li > a::after,
 nav.main-nav > ul > li .has-sub-row > a::after{
-  content:''; display:block; height:2px; width:0; background:var(--accent);
-  transition:width .25s ease;
+  content:''; position:absolute; left:4px; right:4px; bottom:0;
+  height:2px; background:var(--accent);
+  transform:scaleX(0); transform-origin:left;
+  transition:transform .25s ease;
 }
-nav.main-nav > ul > li:hover > a::after,
-nav.main-nav > ul > li:hover .has-sub-row > a::after{ width:100%; }
+/* Underline-on-hover, desktop-only for the same reason as the submenu
+   hover tint above — a tap can trigger :hover on touchscreens and leave
+   the underline stuck "on" after the finger lifts, which is what made
+   Home / My Works look permanently (and incorrectly) highlighted on
+   mobile. */
+@media (hover: hover) and (pointer: fine){
+  nav.main-nav > ul > li:hover > a::after,
+  nav.main-nav > ul > li:hover .has-sub-row > a::after{ transform:scaleX(1); }
+}
 
 /* hover-reveal submenu */
 .has-sub .submenu{
@@ -150,7 +199,13 @@ nav.main-nav > ul > li:hover .has-sub-row > a::after{ width:100%; }
   font-weight:500; color:var(--text);
   white-space:nowrap;
 }
-.submenu li a:hover{ color:var(--accent); background:#faf9f6; }
+/* Hover-tint only for devices with a real pointer/hover (mouse, trackpad).
+   On touchscreens, tapping a link can trigger a "hover" state that never
+   releases the way a real mouse hover does, leaving a stuck white patch
+   behind the tapped submenu item — this keeps the effect desktop-only. */
+@media (hover: hover) and (pointer: fine){
+  .submenu li a:hover{ color:var(--accent); background:#faf9f6; }
+}
 
 .nav-toggle{ display:none; background:none; border:none; font-size:1.4rem; cursor:pointer; color:var(--text); }
 
@@ -200,10 +255,7 @@ nav.main-nav > ul > li:hover .has-sub-row > a::after{ width:100%; }
   .gallery-grid{ column-count:3; }
 }
 @media (max-width: 760px){
-  .gallery-grid{ column-count:2; }
-}
-@media (max-width: 460px){
-  .gallery-grid{ column-count:1; padding:0 4vw 40px; }
+  .gallery-grid{ column-count:2; padding:0 4vw 40px; }
 }
 
 .gallery-grid.home-gallery{
@@ -224,9 +276,6 @@ nav.main-nav > ul > li:hover .has-sub-row > a::after{ width:100%; }
 @media (max-width: 760px){
   .gallery-grid.home-gallery{ column-count:2; column-gap:8px; padding:0 4vw; }
   .gallery-grid.home-gallery a{ margin-bottom:8px; }
-}
-@media (max-width: 460px){
-  .gallery-grid.home-gallery{ column-count:1; }
 }
 
 /* ---------- STANDARD PAGE / TEXT SECTIONS ---------- */
@@ -388,24 +437,70 @@ footer{
 /* ---------- MOBILE NAV ---------- */
 .has-sub-row{ display:flex; align-items:center; }
 .submenu-toggle{ display:none; }
+/* Hidden outside the mobile/tablet panel by default — on desktop this
+   would otherwise render as a stray extra item floating next to the
+   horizontal menu. The mobile/tablet media query below turns it back on. */
+.nav-footer-info{ display:none; }
 
-@media (max-width: 1024px){
+/* Mobile/tablet nav trigger: matches by touch capability first, not just
+   screen width. An iPad in landscape is wide enough to fit the desktop
+   horizontal menu, but it's still a touch device with no real ":hover" —
+   which made the hover-reveal dropdowns under "Home" and "My Works"
+   (About, Featured Works, Landscapes, etc.) impossible to open on tablets.
+   Triggering the same foldable hamburger menu used on phones for any
+   device that lacks real hover, regardless of width, fixes that; the
+   width condition stays as a fallback for older browsers that don't
+   support the hover/pointer media features at all. */
+@media (max-width: 1024px), (hover: none) and (pointer: coarse){
   .nav-toggle{ display:block; }
   nav.main-nav{
-    position:fixed; inset:0; top:70px;
+    position:fixed; top:var(--header-h, 70px); right:0; bottom:0; left:0;
+    /* Top offset comes from a CSS variable set by nav.js (the header's
+       real, measured height), not a hardcoded guess — the header renders
+       a different height at different breakpoints, and a fixed value
+       drifted out of sync at tablet width specifically, leaving a visible
+       gap/notch at the top of the (now narrower, non-full-width) drawer.
+       The 70px is just a same-page fallback for the instant before JS runs. */
+    /* Sized by top+bottom offsets, not a vh/dvh height. Some in-app
+       browsers (Instagram's especially) miscalculate 100vh/100dvh against
+       their own toolbar chrome, so a fixed-height panel can fall short of
+       the real screen and leave a gap at the bottom where its background
+       doesn't reach — the page underneath shows through unstyled there.
+       Letting the browser derive the height from top/bottom offsets
+       instead avoids that regardless of which vh unit a webview supports. */
     z-index:250;
-    height:100vh;            /* fallback for older browsers */
-    height:100dvh;           /* accounts for mobile browser toolbars (Messenger/Zalo in-app browsers especially) */
-    background:rgba(255,255,255,0.94);
-    backdrop-filter:blur(55px) saturate(1.5);
-    -webkit-backdrop-filter:blur(55px) saturate(1.5);
+    background:rgba(255,255,255,0.72);
+    backdrop-filter:blur(28px) saturate(1.6);
+    -webkit-backdrop-filter:blur(28px) saturate(1.6);
     transform:translateX(100%);
     transition:transform .35s ease;
     padding:20px 8vw;
     overflow-y:auto;
     -webkit-overflow-scrolling:touch;
+    display:flex;
+    flex-direction:column;
+  }
+  /* Fallback for browsers/webviews without backdrop-filter support: a
+     near-opaque panel instead of a half-transparent one that would
+     otherwise be hard to read without the blur underneath it. */
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))){
+    nav.main-nav{ background:rgba(255,255,255,0.98); }
   }
   nav.main-nav.open{ transform:translateX(0); }
+  /* On a touch device with real room to spare (tablets — phones stay
+     full-bleed since a third of a phone screen is too cramped to read),
+     narrow the slide-in panel to roughly a third of the screen and anchor
+     it to the right, like a proper drawer, instead of covering the whole
+     width the way it does on a phone. The 8vw side padding above is sized
+     for a full-width phone panel, so it's swapped for a fixed value here
+     to leave the narrower drawer enough room for its text. */
+  @media (min-width: 641px){
+    nav.main-nav{
+      left:auto;
+      width:clamp(320px, 35vw, 420px);
+      padding:20px 28px;
+    }
+  }
   nav.main-nav > ul{ flex-direction:column; gap:0; }
   nav.main-nav > ul > li{ border-bottom:1px solid var(--line); }
   nav.main-nav > ul > li > a,
@@ -425,13 +520,37 @@ footer{
     position:static !important; left:auto !important; transform:none !important;
     box-shadow:none; border:none; width:100%;
     background:transparent;
-    display:block; visibility:visible; padding:0 0 14px; min-width:0;
+    display:block; visibility:visible; padding:0; margin:0; min-width:0;
     text-align:center;
-    max-height:0; opacity:0; overflow:hidden;
-    transition:max-height .35s ease, opacity .3s ease;
+    height:0; max-height:0; opacity:0; overflow:hidden;
+    transition:max-height .35s ease, opacity .3s ease, padding .35s ease;
   }
   .has-sub .submenu li a{ padding:14px 4px; font-size:1rem; display:block; white-space:normal; }
-  .has-sub.open .submenu{ max-height:220px; opacity:1; }
+  /* padding-bottom only applies once expanded — max-height:0 alone doesn't
+     zero out padding, so a collapsed submenu was still adding an invisible
+     14px underneath "Home" / "My Works", pushing their divider line down
+     and making the label sit high/off-center versus the plain rows
+     (Connect, My Workshops, Instagram) that have no hidden submenu at all. */
+  .has-sub.open .submenu{ height:auto; max-height:220px; opacity:1; padding-bottom:14px; }
+
+  /* Footer-style info (copyright + social icons) reusing the same
+     .footer-social-* classes the real <footer> uses, at the bottom of
+     the slide-in panel — the panel otherwise had a lot of empty space
+     below the menu items on tablet, where the drawer is tall but the
+     link list is short. margin-top:auto pins it to the bottom when
+     there's spare room, and lets it follow normally after the menu on
+     shorter viewports where the panel scrolls. */
+  .nav-footer-info{
+    display:block;
+    margin-top:auto;
+    padding-top:28px;
+    border-top:1px solid var(--line);
+  }
+  .nav-footer-info .footer-social-block{ align-items:flex-start; }
+  .nav-footer-info .nav-footer-copyright{
+    display:block; margin-top:14px;
+    font-size:0.72rem; color:var(--text-dim);
+  }
 }
 
 /* ---------- LIGHTBOX ---------- */
@@ -758,8 +877,13 @@ img{
    close to what you see on desktop. 3:2 matches typical DSLR/mirrorless
    landscape framing; adjust the ratio below if your hero photos are a
    different shape (e.g. 4/3 or 16/9). max-height keeps things sane on
-   landscape-oriented phones, where the width is the tall dimension. */
-@media (max-width: 1024px){
+   landscape-oriented phones, where the width is the tall dimension.
+   Also triggers on any portrait-oriented viewport regardless of raw
+   width — an iPad Pro in portrait is ~1032px wide (just past the 1024px
+   line) but still tall-and-narrow the same way a phone is, and was
+   falling through to the desktop viewport-height rule and getting
+   cropped hard as a result. */
+@media (max-width: 1024px), (orientation: portrait){
   .home-hero{
     height:auto;
     aspect-ratio: 3 / 2;
