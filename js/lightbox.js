@@ -2,8 +2,8 @@
 // Expects markup: .gallery-grid a > img, and a .lightbox overlay with a
 // .lightbox-frame wrapper around #lightboxImg in the page.
 (function () {
-  const galleryLinks = Array.from(document.querySelectorAll('.gallery-grid a'));
-  if (!galleryLinks.length) return;
+  const grid = document.querySelector('.gallery-grid');
+  if (!grid) return;
 
   const lightbox = document.getElementById('lightbox');
   const frame = document.getElementById('lightboxFrame');
@@ -14,16 +14,24 @@
   const btnPrev = document.getElementById('lightboxPrev');
   const btnNext = document.getElementById('lightboxNext');
 
-  const items = galleryLinks.map(a => {
-    const img = a.querySelector('img');
-    const cap = a.querySelector('.cap');
-    return {
-      src: img ? img.src : '',
-      alt: img ? img.alt : '',
-      caption: cap ? cap.textContent.trim() : '',
-      imgEl: img
-    };
-  });
+  // Photos load into the grid gradually (row by row) rather than all at
+  // once, so the list of items is rebuilt fresh at the moment of each
+  // click — scanning it just once up front, before any photos have
+  // loaded, would find nothing and leave every photo unclickable.
+  let items = [];
+  function refreshItems() {
+    items = Array.from(grid.querySelectorAll('a')).map(a => {
+      const img = a.querySelector('img');
+      const cap = a.querySelector('.cap');
+      return {
+        src: img ? img.src : '',
+        alt: img ? img.alt : '',
+        caption: cap ? cap.textContent.trim() : '',
+        imgEl: img,
+        el: a
+      };
+    });
+  }
 
   let current = 0;
 
@@ -87,11 +95,17 @@
     document.body.style.overflow = '';
   }
 
-  galleryLinks.forEach((a, i) => {
-    a.addEventListener('click', (e) => {
-      e.preventDefault();
-      open(i);
-    });
+  // One delegated listener on the grid itself (which exists from page
+  // load) rather than one listener per photo — photos that don't exist
+  // yet when this script runs still work correctly once they appear,
+  // since we're listening on their eventual container, not on them.
+  grid.addEventListener('click', (e) => {
+    const a = e.target.closest('a');
+    if (!a || !grid.contains(a)) return;
+    e.preventDefault();
+    refreshItems();
+    const idx = items.findIndex(it => it.el === a);
+    if (idx !== -1) open(idx);
   });
 
   btnClose.addEventListener('click', close);

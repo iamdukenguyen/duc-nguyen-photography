@@ -119,6 +119,18 @@ const HOME_GALLERY_SOURCE = [
 // pages (Wildlife & Macro intentionally excluded from the homepage) — no
 // separate copies stored for the homepage — and shows them in a random
 // order on every page load.
+//
+// Photos are placed directly into their own column's container — never
+// into one shared container the browser auto-balances into columns via
+// CSS column-count. That auto-balancing recalculates every column's
+// contents from scratch each time a photo is added, which is what
+// caused photos to visibly jump between columns and flicker as more of
+// them loaded in. Assigning each photo to a specific column ourselves
+// means adding a new one never touches photos already sitting in any
+// column — and lets us reveal a full row at a time (whichever photos
+// land in row 1, one per column, appear together; row 2 doesn't start
+// appearing until row 1 is fully placed), which is the actual load
+// order requested, not just "top to bottom" in a loose sense.
 (function () {
   const container = document.getElementById('homeGallery');
   if (!container) return;
@@ -130,34 +142,69 @@ const HOME_GALLERY_SOURCE = [
     [items[i], items[j]] = [items[j], items[i]];
   }
 
-  const frag = document.createDocumentFragment();
-  items.forEach(item => {
-    const a = document.createElement('a');
-    a.href = '#';
-    const img = document.createElement('img');
-    img.src = item.src;
-    img.alt = item.alt;
-    img.loading = 'lazy';
-    a.appendChild(img);
-    frag.appendChild(a);
-  });
-  container.appendChild(frag);
-
-  // Re-run scroll reveal on the freshly-injected items, since reveal.js
-  // already ran (and found nothing) before this script populated the grid.
-  const targets = container.querySelectorAll('a');
-  targets.forEach(el => el.classList.add('reveal'));
-  if ('IntersectionObserver' in window) {
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('in-view');
-          io.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-    targets.forEach(el => io.observe(el));
-  } else {
-    targets.forEach(el => el.classList.add('in-view'));
+  function getColumnCount() {
+    const w = window.innerWidth;
+    if (w <= 760) return 2;
+    if (w <= 1100) return 3;
+    return 4;
   }
+
+  let columnCount = getColumnCount();
+  const columns = [];
+  function buildColumns() {
+    columns.length = 0;
+    container.innerHTML = '';
+    for (let c = 0; c < columnCount; c++) {
+      const col = document.createElement('div');
+      col.className = 'gallery-col';
+      container.appendChild(col);
+      columns.push(col);
+    }
+  }
+  buildColumns();
+
+  function preload(item) {
+    return new Promise(resolve => {
+      const pre = new Image();
+      pre.onload = () => resolve(item);
+      pre.onerror = () => resolve(item);
+      pre.src = item.src;
+    });
+  }
+
+  // Every download starts now, in parallel, at full speed...
+  const pending = items.map(preload);
+
+  // ...but photos are grouped into rows of (current column count) and
+  // revealed one full row at a time, in order.
+  const revealedEls = [];
+  (async () => {
+    for (let i = 0; i < pending.length; i += columnCount) {
+      const row = pending.slice(i, i + columnCount);
+      await Promise.all(row.map((p, colIndex) => p.then(item => {
+        const a = document.createElement('a');
+        a.href = '#';
+        a.className = 'reveal';
+        const img = document.createElement('img');
+        img.src = item.src;
+        img.alt = item.alt;
+        a.appendChild(img);
+        columns[colIndex % columns.length].appendChild(a);
+        revealedEls.push(a);
+        requestAnimationFrame(() => a.classList.add('in-view'));
+      })));
+      await new Promise(r => setTimeout(r, 60));
+    }
+  })();
+
+  // Rebuild the column structure if the responsive column count changes
+  // (window resized, tablet rotated) — existing photos just move to
+  // their new column, no reload or re-reveal needed.
+  window.addEventListener('resize', () => {
+    const newCount = getColumnCount();
+    if (newCount === columnCount) return;
+    columnCount = newCount;
+    buildColumns();
+    revealedEls.forEach((el, idx) => columns[idx % columnCount].appendChild(el));
+  });
 })();

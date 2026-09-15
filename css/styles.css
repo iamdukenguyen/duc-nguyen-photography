@@ -218,17 +218,30 @@ nav.main-nav > ul > li .has-sub-row > a::after{
 
 /* ---------- FULL-PAGE GALLERY (Home / Landscapes / People) ---------- */
 .gallery-page{ padding-top:78px; }
+/* JS (gallery-shuffle.js / home-gallery.js) builds the actual column
+   sub-containers (.gallery-col) and places each photo into a specific
+   one directly — rather than the browser's own column-count masonry,
+   which recalculates every column's contents from scratch each time a
+   new photo is added. That recalculation is what caused photos to
+   visibly jump between columns and flicker as more of them loaded in;
+   author-controlled columns are never touched once a photo is placed. */
 .gallery-grid{
-  column-count:4;
-  column-gap:2px;
+  display:flex;
+  gap:2px;
   padding:0 5vw 60px;
+  align-items:flex-start;
+}
+.gallery-grid .gallery-col{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  flex:1 1 0;
+  min-width:0;
 }
 .gallery-grid a{
   display:block;
   position:relative;
   overflow:hidden;
-  break-inside:avoid;
-  margin-bottom:2px;
   border-radius:2px;
 }
 .gallery-grid img{
@@ -258,31 +271,24 @@ nav.main-nav > ul > li .has-sub-row > a::after{
 }
 .page-title-bar p{ color:var(--text-dim); font-size:0.9rem; }
 
-@media (max-width: 1100px){
-  .gallery-grid{ column-count:3; }
-}
 @media (max-width: 760px){
-  .gallery-grid{ column-count:2; padding:0 4vw 40px; }
+  .gallery-grid{ padding:0 4vw 40px; }
 }
 
 .gallery-grid.home-gallery{
-  column-count:4;
-  column-gap:2px;
+  gap:2px;
   padding:0 5vw;
 }
+.gallery-grid.home-gallery .gallery-col{ gap:2px; }
 .gallery-grid.home-gallery a{
-  margin-bottom:2px;
   border-radius:0;
 }
 .gallery-grid.home-gallery a:hover img{ transform:none; }
 .gallery-grid.home-gallery .cap{ display:none; }
 
-@media (max-width: 1100px){
-  .gallery-grid.home-gallery{ column-count:3; }
-}
 @media (max-width: 760px){
-  .gallery-grid.home-gallery{ column-count:2; column-gap:8px; padding:0 4vw; }
-  .gallery-grid.home-gallery a{ margin-bottom:8px; }
+  .gallery-grid.home-gallery{ gap:8px; padding:0 4vw; }
+  .gallery-grid.home-gallery .gallery-col{ gap:8px; }
 }
 
 /* ---------- STANDARD PAGE / TEXT SECTIONS ---------- */
