@@ -772,28 +772,22 @@ img{
    City), everywhere in between is proportional to how far down the page
    you've scrolled. */
 
-/* Solid white in the middle where the text sits, fading to fully
-   transparent on all four edges — softens the boundary into the map
-   behind it instead of a hard rectangular edge. The color itself stays
-   a plain solid white (background:#fff); the fading is done separately
-   via mask-image, which uses two gradients (one for left/right, one for
-   top/bottom) combined together so every edge fades out, not just the
-   sides. */
+/* No white backdrop here — text and photo sit directly on the visible
+   map, same as the footer already does. */
 .about-page .content-wrap{
   position:relative;
   z-index:1;
-  -webkit-mask-image:
-    linear-gradient(to right, transparent, #000 12%, #000 88%, transparent),
-    linear-gradient(to bottom, transparent, #000 6%, #000 94%, transparent);
-  -webkit-mask-composite: source-in;
-  mask-image:
-    linear-gradient(to right, transparent, #000 12%, #000 88%, transparent),
-    linear-gradient(to bottom, transparent, #000 6%, #000 94%, transparent);
-  mask-composite: intersect;
 }
 
 @media (max-width: 860px){
-  .about-page .map-bg{ background-size:100% auto; opacity:0.5; }
+  /* Sized by height instead of width — a phone screen has no side margin
+     for the map to peek out in, so scaling to fit the width (like desktop
+     does) left too little vertical room to pan through, and it also fought
+     with the text since there was nowhere for it to sit but directly
+     behind. Scaling to height instead means the map always fills the
+     screen top-to-bottom with room to pan, and just crops off the sides —
+     fine, since the sides aren't the point on a narrow screen anyway. */
+  .about-page .map-bg{ background-size:auto 220%; opacity:0.05; }
 }
 
 /* ---------- ABOUT PAGE — MY AWARDS (accordion) ---------- */
