@@ -175,13 +175,28 @@ const HOME_GALLERY_SOURCE = [
   // Every download starts now, in parallel, at full speed...
   const pending = items.map(preload);
 
+  // Always hands back whichever column is currently shortest, so photos
+  // keep the columns balanced as they're added — rather than a fixed
+  // rotation, which could leave one column's photos shorter overall and
+  // end with a trailing gap at the bottom while others kept going.
+  function shortestColumn() {
+    let best = columns[0];
+    for (let i = 1; i < columns.length; i++) {
+      if (columns[i].offsetHeight < best.offsetHeight) best = columns[i];
+    }
+    return best;
+  }
+
   // ...but photos are grouped into rows of (current column count) and
-  // revealed one full row at a time, in order.
+  // revealed one full row at a time, in order. Within a row, photos are
+  // placed one at a time (not concurrently) so each one's column choice
+  // accounts for the ones just placed before it.
   const revealedEls = [];
   (async () => {
     for (let i = 0; i < pending.length; i += columnCount) {
       const row = pending.slice(i, i + columnCount);
-      await Promise.all(row.map((p, colIndex) => p.then(item => {
+      const readyItems = await Promise.all(row);
+      readyItems.forEach(item => {
         const a = document.createElement('a');
         a.href = '#';
         a.className = 'reveal';
@@ -189,22 +204,22 @@ const HOME_GALLERY_SOURCE = [
         img.src = item.src;
         img.alt = item.alt;
         a.appendChild(img);
-        columns[colIndex % columns.length].appendChild(a);
+        shortestColumn().appendChild(a);
         revealedEls.push(a);
         requestAnimationFrame(() => a.classList.add('in-view'));
-      })));
+      });
       await new Promise(r => setTimeout(r, 60));
     }
   })();
 
   // Rebuild the column structure if the responsive column count changes
-  // (window resized, tablet rotated) — existing photos just move to
-  // their new column, no reload or re-reveal needed.
+  // (window resized, tablet rotated) — existing photos redistribute to
+  // the new columns, shortest-first, same as the initial placement.
   window.addEventListener('resize', () => {
     const newCount = getColumnCount();
     if (newCount === columnCount) return;
     columnCount = newCount;
     buildColumns();
-    revealedEls.forEach((el, idx) => columns[idx % columnCount].appendChild(el));
+    revealedEls.forEach(el => shortestColumn().appendChild(el));
   });
 })();

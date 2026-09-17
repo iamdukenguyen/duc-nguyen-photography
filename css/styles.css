@@ -287,8 +287,7 @@ nav.main-nav > ul > li .has-sub-row > a::after{
 .gallery-grid.home-gallery .cap{ display:none; }
 
 @media (max-width: 760px){
-  .gallery-grid.home-gallery{ gap:8px; padding:0 4vw; }
-  .gallery-grid.home-gallery .gallery-col{ gap:8px; }
+  .gallery-grid.home-gallery{ padding:0 4vw; }
 }
 
 /* ---------- STANDARD PAGE / TEXT SECTIONS ---------- */
@@ -755,50 +754,90 @@ img{
   margin:80px 0;
 }
 
-/* ---------- ABOUT PAGE — AWARD SECTION ---------- */
-.award-heading{
-  text-align:center;
-  text-transform:uppercase;
-  font-weight:500;
-  letter-spacing:0.14em;
-  font-size:clamp(1rem, 2vw, 1.3rem);
-  color:var(--text-dim);
-  margin-bottom:34px;
+/* ---------- ABOUT PAGE — MAP BACKGROUND ---------- */
+/* Placeholder path — swap in the real map image here once it's ready.
+   Everything else (scroll-panning behavior, sizing) stays the same. */
+.about-page .map-bg{
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  background-image:url('../images/about/map-background.jpg');
+  background-repeat:no-repeat;
+  background-position:center 0%;
+  background-size:100% auto;
+  opacity:0.05;
 }
+/* backgroundPositionY is driven by scroll position via JS in about.html —
+   0% shows the top of the map (Hanoi), 100% shows the bottom (Ho Chi Minh
+   City), everywhere in between is proportional to how far down the page
+   you've scrolled. */
+
+/* Solid white in the middle where the text sits, fading to fully
+   transparent on all four edges — softens the boundary into the map
+   behind it instead of a hard rectangular edge. The color itself stays
+   a plain solid white (background:#fff); the fading is done separately
+   via mask-image, which uses two gradients (one for left/right, one for
+   top/bottom) combined together so every edge fades out, not just the
+   sides. */
+.about-page .content-wrap{
+  position:relative;
+  z-index:1;
+  -webkit-mask-image:
+    linear-gradient(to right, transparent, #000 12%, #000 88%, transparent),
+    linear-gradient(to bottom, transparent, #000 6%, #000 94%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent, #000 12%, #000 88%, transparent),
+    linear-gradient(to bottom, transparent, #000 6%, #000 94%, transparent);
+  mask-composite: intersect;
+}
+
+@media (max-width: 860px){
+  .about-page .map-bg{ background-size:100% auto; opacity:0.5; }
+}
+
+/* ---------- ABOUT PAGE — MY AWARDS (accordion) ---------- */
+.awards-section{ margin:0 0 20px; }
 .award-photo-full{
   width:100%;
   display:block;
-  margin-bottom:50px;
+  margin-bottom:36px;
+  border-radius:2px;
 }
-.award-detail-grid {
-  display: grid;
-  grid-template-columns: 1fr 1.2fr; /* Increases width of image column and brings text closer */
-  gap: 2.5vw;                        /* Tightens the horizontal gap between image & text */
-  align-items: stretch;               /* Forces image container to match total height of text block */
+.awards-list{ max-width:760px; margin:34px auto 0; }
+.award-item{ border-bottom:1px solid var(--line); }
+.award-item:first-child{ border-top:1px solid var(--line); }
+.award-toggle{
+  display:flex; align-items:center; justify-content:space-between; gap:20px;
+  width:100%; background:none; border:none; cursor:pointer; text-align:left;
+  padding:24px 4px; font-family:var(--display); font-weight:700;
+  font-size:clamp(0.95rem, 1.6vw, 1.1rem); color:var(--text);
 }
-.award-cert {
-  width: 100%;
-  height: 100%;                       /* Fills vertical height of the text block */
-  object-fit: cover;                  /* Ensures certificate scales cleanly without distortion */
-  border-radius: 2px;
-  box-shadow: 0 8px 26px rgba(0,0,0,0.12);
+.award-toggle .award-arrow{ flex:none; transition:transform .3s ease; color:var(--text-dim); }
+.award-item.open .award-toggle .award-arrow{ transform:rotate(180deg); }
+/* Collapse control lives on this wrapper only — the actual padded content
+   sits in .award-detail below, a separate element, so a collapsed panel
+   can genuinely be 0-height with nothing leaking past overflow:hidden. */
+.award-panel{ max-height:0; overflow:hidden; opacity:0; transition:max-height .5s ease, opacity .4s ease; }
+.award-item.open .award-panel{ max-height:2400px; opacity:1; }
+.award-detail{
+  max-width:640px; margin:0 auto; text-align:center;
+  padding:8px 4px 44px;
 }
-.award-info .award-label{
-  color:#3f7fbf; font-weight:700; font-size:1.15rem; margin-bottom:12px;
+.award-detail .award-label{
+  color:#3f7fbf; font-weight:700; font-size:1.1rem; margin-bottom:12px;
 }
-.award-info h3{
+.award-detail h3{
   font-family:var(--display); font-size:1.3rem; margin-bottom:6px; color:var(--text);
 }
-.award-subtext{ color:var(--text-dim); font-size:0.9rem; margin-bottom:14px; }
-.award-phototitle{ font-style:italic; font-weight:700; color:var(--text); margin-bottom:16px; }
-.award-info .award-label + p{ color:var(--text-dim); font-size:0.95rem; line-height:1.7; }
-.award-info > .award-label:nth-of-type(2){ font-size:0.92rem; margin-top:4px; margin-bottom:14px; }
+.award-detail .award-subtext{ color:var(--text-dim); font-size:0.9rem; margin-bottom:14px; }
+.award-detail .award-phototitle{ font-style:italic; font-weight:700; color:var(--text); margin-bottom:16px; }
+.award-detail hr.award-divider-thin{ border:none; border-top:1px solid var(--line); max-width:200px; margin:0 auto 26px; }
+.award-detail p.award-desc{ color:var(--text-dim); font-size:0.95rem; line-height:1.7; }
 
 @media (max-width: 860px){
   .about-bio{ grid-template-columns:1fr; gap:20px; }
   .about-bio img{ order:-1; }
-  .award-detail-grid{ grid-template-columns:1fr; gap:20px; }
-  .award-cert{ max-width:100%; }
 }
 
 /* ---------- SCROLL REVEAL (Home / Landscapes / People / Wildlife / Featured Works) ---------- */

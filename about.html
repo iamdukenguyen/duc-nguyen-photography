@@ -9,7 +9,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
 </head>
-<body>
+<body class="about-page">
+
+<div class="map-bg" aria-hidden="true"></div>
 
 <header id="siteHeader">
   <a href="index.html" class="logo">
@@ -45,18 +47,6 @@
       <li><a href="https://sites.google.com/view/ecoventuresvietnam" target="_blank" rel="noopener">My Workshops</a></li>
       <li><a href="https://www.instagram.com/wandersinframes/" target="_blank" rel="noopener">Instagram</a></li>
     </ul>
-    <div class="nav-footer-info">
-      <div class="footer-social-block">
-        <span class="footer-social-label">Duc Nguyen on Social Media</span>
-        <div class="footer-social">
-          <a href="https://www.instagram.com/wandersinframes/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c2.72 0 3.06.01 4.12.06 1.07.05 1.79.22 2.43.46.66.25 1.22.6 1.77 1.15.55.55.9 1.11 1.15 1.77.24.64.41 1.36.46 2.43.05 1.06.06 1.4.06 4.12s-.01 3.06-.06 4.12c-.05 1.07-.22 1.79-.46 2.43a4.9 4.9 0 0 1-1.15 1.77 4.9 4.9 0 0 1-1.77 1.15c-.64.24-1.36.41-2.43.46-1.06.05-1.4.06-4.12.06s-3.06-.01-4.12-.06c-1.07-.05-1.79-.22-2.43-.46a4.9 4.9 0 0 1-1.77-1.15 4.9 4.9 0 0 1-1.15-1.77c-.24-.64-.41-1.36-.46-2.43C2.01 15.06 2 14.72 2 12s.01-3.06.06-4.12c.05-1.07.22-1.79.46-2.43.25-.66.6-1.22 1.15-1.77A4.9 4.9 0 0 1 5.44 2.53c.64-.24 1.36-.41 2.43-.46C8.94 2.01 9.28 2 12 2zm0 1.8c-2.67 0-2.99.01-4.04.06-.87.04-1.34.18-1.66.3-.42.16-.72.36-1.03.67-.31.31-.51.61-.67 1.03-.12.32-.26.79-.3 1.66C4.24 8.5 4.23 8.82 4.23 11.5v1c0 2.67.01 2.99.06 4.04.04.87.18 1.34.3 1.66.16.42.36.72.67 1.03.31.31.61.51 1.03.67.32.12.79.26 1.66.3 1.05.05 1.37.06 4.04.06h1c2.67 0 2.99-.01 4.04-.06.87-.04 1.34-.18 1.66-.3.42-.16.72-.36 1.03-.67.31-.31.51-.61.67-1.03.12-.32.26-.79.3-1.66.05-1.05.06-1.37.06-4.04v-1c0-2.67-.01-2.99-.06-4.04-.04-.87-.18-1.34-.3-1.66a2.77 2.77 0 0 0-.67-1.03 2.77 2.77 0 0 0-1.03-.67c-.32-.12-.79-.26-1.66-.3C15 3.81 14.68 3.8 12 3.8zm0 3.05a5.15 5.15 0 1 1 0 10.3 5.15 5.15 0 0 1 0-10.3zm0 1.8a3.35 3.35 0 1 0 0 6.7 3.35 3.35 0 0 0 0-6.7zm5.35-2.02a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg></a>
-          <a href="https://www.facebook.com/Ducngraphy" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 21v-7.6h2.6l.4-3h-3v-1.9c0-.87.24-1.46 1.5-1.46h1.6V4.35C15.9 4.24 15.06 4.2 14.06 4.2c-2.16 0-3.64 1.32-3.64 3.75v2.45H7.8v3h2.62V21h3.08z"/></svg></a>
-          <a href="mailto:iamdukenguyen@gmail.com" aria-label="Email"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5A1.5 1.5 0 0 1 4.5 4h15A1.5 1.5 0 0 1 21 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5v-13zm2.2.7 6.8 5.44 6.8-5.44H5.2zM19.3 7.1l-6.85 5.48a.75.75 0 0 1-.9 0L4.7 7.1v11.15h14.6V7.1z"/></svg></a>
-        </div>
-      </div>
-      <span class="nav-footer-copyright">© 2026 Duc Nguyen Photography. All rights reserved.</span>
-    </div>
-  
   </nav>
 </header>
 
@@ -90,25 +80,88 @@
 
   <hr class="about-divider">
 
-  <div class="award-section">
-    <h2 class="award-heading">UNESCO'S Youth Eyes on the Silk Roads</h2>
-    <img class="award-photo-full" src="images/about/award-photo.webp" alt="The Epic Fight — award-winning photo">
-
-    <div class="award-detail-grid">
-      <img class="award-cert" src="images/about/certificate.webp" alt="UNESCO Honourable Mention certificate">
-      <div class="award-info">
-        <div class="award-label">Honourable Mention</div>
-        <h3>Nguyễn Hoàng Đức</h3>
-        <p class="award-subtext">24 years old, Viet Nam</p>
-        <p class="award-phototitle">The Epic Fight</p>
-        <div class="award-label">Theme: Traditional Sports and Games</div>
-        <p>Two fighters compete in a mudball wrestling game to earn the kick-off for their team. The mudball wrestling festival Lễ Hội Vật Cầu Bùn is one of many fascinating festivals that have taken place across Viet Nam for hundreds of years. This three-day festival is known as Khanh Ha. The event celebrates Trieu Quang Phuc's victory over black demons. Historically, the village has faced serious flooding, so the act of fighting for the ball is symbolic of local people trying to bring back the sunshine and end the flooding. It is believed that the more times the wrestlers "steal" the ball back from one another, the more prosperous the next harvest will be.</p>
+  <div class="awards-section">
+    <h2 class="display" style="text-align:center;">My Awards</h2>
+    <div class="awards-list">
+      <div class="award-item">
+        <button class="award-toggle" aria-expanded="false">
+          <span>UNESCO's "Youth Eyes on the Silk Roads 2019–2020": Honourable Mentions – Category 2</span>
+          <span class="award-arrow" aria-hidden="true">&#8964;</span>
+        </button>
+        <div class="award-panel">
+          <div class="award-detail">
+            <img class="award-photo-full" src="images/about/award-photo-01.webp" alt="The Epic Fight — award-winning photo">
+            <div class="award-label">Honourable Mention</div>
+            <h3>Nguyễn Hoàng Đức</h3>
+            <p class="award-subtext">24 years old, Viet Nam</p>
+            <p class="award-phototitle">The Epic Fight</p>
+            <div class="award-label">Theme: Traditional Sports and Games</div>
+            <hr class="award-divider-thin">
+            <p class="award-desc">Two fighters compete in a mudball wrestling game to earn the kick-off for their team. The mudball wrestling festival Lễ Hội Vật Cầu Bùn is one of many fascinating festivals that have taken place across Viet Nam for hundreds of years. This three-day festival is known as Khanh Ha. The event celebrates Trieu Quang Phuc's victory over black demons. Historically, the village has faced serious flooding, so the act of fighting for the ball is symbolic of local people trying to bring back the sunshine and end the flooding. It is believed that the more times the wrestlers "steal" the ball back from one another, the more prosperous the next harvest will be.</p>
+          </div>
+        </div>
+      </div>
+      <div class="award-item">
+        <button class="award-toggle" aria-expanded="false">
+          <span>UNESCO's "Youth Eyes on the Silk Roads 2018": 70 Best Photos</span>
+          <span class="award-arrow" aria-hidden="true">&#8964;</span>
+        </button>
+        <div class="award-panel">
+          <div class="award-detail">
+            <img class="award-photo-full" src="images/about/award-photo-02.webp" alt="A Thousand Lanterns — 70 Best Photos">
+            <div class="award-label">70 Best Photos</div>
+            <h3>Nguyễn Hoàng Đức</h3>
+            <p class="award-subtext">22 years old, Viet Nam</p>
+            <p class="award-phototitle">A Thousand Lanterns</p>
+            <hr class="award-divider-thin">
+            <p class="award-desc">The couple poses for their wedding photo in front of a lantern shop in Hoi An, Viet Nam. Hoi An, known as the country's historic town, is the oldest town in Viet Nam. It still retains its 15th century charm. The town is especially romantic at night with thousands of lanterns in the street. Thus, it becomes the most romantic honeymoon landmark in Viet Nam.</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </main>
 
+<script>
+  // Awards accordion — one panel open at a time.
+  (function () {
+    document.querySelectorAll('.award-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.closest('.award-item');
+        const willOpen = !item.classList.contains('open');
+        document.querySelectorAll('.award-item.open').forEach(openItem => {
+          if (openItem !== item) {
+            openItem.classList.remove('open');
+            openItem.querySelector('.award-toggle').setAttribute('aria-expanded', 'false');
+          }
+        });
+        item.classList.toggle('open', willOpen);
+        btn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+      });
+    });
+  })();
+
+  // Map background: pans from top (Hanoi) to bottom (Ho Chi Minh City) in
+  // sync with how far down the page you've scrolled — 0% scroll shows the
+  // top of the map, 100% scroll shows the bottom, everywhere in between
+  // is proportional. Swap the placeholder path in the CSS (.map-bg) for
+  // the real map image whenever it's ready — nothing here needs to change.
+  (function () {
+    const mapBg = document.querySelector('.map-bg');
+    if (!mapBg) return;
+    function updateMapScroll() {
+      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = scrollable > 0 ? window.scrollY / scrollable : 0;
+      mapBg.style.backgroundPositionY = (progress * 100) + '%';
+    }
+    window.addEventListener('scroll', updateMapScroll, { passive: true });
+    window.addEventListener('resize', updateMapScroll);
+    updateMapScroll();
+  })();
+</script>
+
 <footer>
+
   <span>© 2026 Duc Nguyen Photography. All rights reserved.</span>
   <div class="footer-social-block">
     <span class="footer-social-label">Duc Nguyen on Social Media</span>
